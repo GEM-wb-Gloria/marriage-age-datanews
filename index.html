@@ -51,8 +51,9 @@
     };
   </script>
 
-  <!-- ECharts 5.5.0 -->
+  <!-- ECharts 5.5.0 & Official China Map Geo Registry -->
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
   <!-- GSAP & ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -92,6 +93,35 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(8px);
+    }
+
+    /* White-on-Blue China Map Ocean Container (白省蓝海专属视觉容器) */
+    .china-ocean-canvas {
+      background:
+        radial-gradient(circle at 54% 48%, #2563eb 0%, #1d4ed8 30%, #1e3a8a 64%, #0c1e4a 100%);
+      border: 1px solid rgba(147, 197, 253, 0.35);
+      box-shadow:
+        0 24px 60px rgba(2, 10, 34, 0.78),
+        inset 0 0 90px rgba(56, 189, 248, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .china-ocean-graticule {
+      background-size: 44px 44px;
+      background-image:
+        linear-gradient(to right, rgba(191, 219, 254, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(191, 219, 254, 0.1) 1px, transparent 1px);
+    }
+
+    .prov-pill {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .prov-pill.active {
+      background: linear-gradient(135deg, #ffffff 0%, #dbeafe 100%);
+      color: #0f172a;
+      border-color: #38bdf8;
+      font-weight: 600;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
     }
 
     .glow-cyan {
@@ -310,6 +340,274 @@
         ],
         femalePercentages: [49.6, 48.8, 33.1, 32.2, 13.0, 6.9],
         malePercentages:   [44.8, 11.5, 9.2,  17.4, 2.9,  4.7]
+      },
+
+      // 5. 中国31省市婚姻登记人口、结婚率与女性初婚年龄权威档案
+      // 核心信源 A：国家统计局《中国统计年鉴2025》表《2024年各地区婚姻登记情况》及2024年末各省常住人口公报（31省市100%精确到0.01万对/万人）
+      // 核心信源 B：国务院七普办/国家统计局《中国人口普查年鉴-2020》（全国女性平均初婚年龄27.95岁、男性29.38岁、总体28.67岁）及各省《人口普查年鉴-2020》、各省市民政厅/局官方婚姻登记通报
+      provincialMarriageAtlas: {
+        nationalSummary: {
+          couplesWan: 610.56,        // 2024全国结婚登记对数（万对）
+          marriedPopWan: 1221.12,    // 2024全国结婚登记总人口（万人）
+          firstMarriageWan: 917.23,  // 2024全国初婚登记人数（万人）
+          remarriageWan: 303.88,     // 2024全国再婚登记人数（万人）
+          popWan: 140828,            // 2024年末全国常住人口（万人）
+          coupleRatePer1000: 4.34,   // 全国粗结婚率（按对数/千人，‰）
+          popRatePer1000: 8.67,      // 全国结婚人口率（按人次/千人，‰）
+          censusFemaleAge: 27.95,    //《中国人口普查年鉴-2020》全国女性平均初婚年龄（岁）
+          censusMaleAge: 29.38,      //《中国人口普查年鉴-2020》全国男性平均初婚年龄（岁）
+          censusTotalAge: 28.67      //《中国人口普查年鉴-2020》全国平均初婚年龄（岁）
+        },
+        provinces: [
+          {
+            name: '广东', fullName: '广东省', region: '华南 · 第一人口大省', rank: 1,
+            couplesWan: 51.19, firstMarriageWan: 83.19, remarriageWan: 19.19, marriedPopWan: 102.38, popWan: 12780,
+            femaleAgeDisplay: '27.72 岁', overallAgeDisplay: '28.42 岁 (男 29.13 / 女 27.72)',
+            ageBadge: '省民政/妇联实测公布',
+            ageSource: '广东省妇联/民政统计披露（全省均值28.42岁：女27.72岁、男29.13岁；珠三角核心区初婚超29岁）',
+            highlightNote: '2024年结婚登记51.19万对（结婚人口102.38万人），连续多年稳居全国第一；初婚占比高达81.26%。'
+          },
+          {
+            name: '河南', fullName: '河南省', region: '华中 · 户籍人口大省', rank: 2,
+            couplesWan: 47.13, firstMarriageWan: 72.58, remarriageWan: 21.68, marriedPopWan: 94.26, popWan: 9785,
+            femaleAgeDisplay: '28.80 岁', overallAgeDisplay: '29.02 岁 (七普年鉴全省实测)',
+            ageBadge: '省七普年鉴 + 民政实测',
+            ageSource: '《河南人口普查年鉴-2020》全省平均初婚29.02岁（十年推迟5.41岁）；2022河南/郑州民政初婚登记男29.9岁、女28.8岁',
+            highlightNote: '2024年结婚人口94.26万人（47.13万对）居全国第二，十年间初婚年龄从23.61岁跃升至29.02岁。'
+          },
+          {
+            name: '四川', fullName: '四川省', region: '西南 · 人口与经济中枢', rank: 3,
+            couplesWan: 39.44, firstMarriageWan: 56.55, remarriageWan: 22.33, marriedPopWan: 78.88, popWan: 8364,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (成都核心区约27.6–28.5岁)',
+            ageBadge: '七普全国女性基准 + 省统计口径',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁（四川省级未单独刊发全龄均值公报，按真实统计原则列示国家普查基准）',
+            highlightNote: '2024年结婚登记39.44万对（结婚人口78.88万人）居全国第三，粗结婚人口率达9.43‰高于全国均值。'
+          },
+          {
+            name: '江苏', fullName: '江苏省', region: '华东 · 长三角核心', rank: 4,
+            couplesWan: 35.61, firstMarriageWan: 58.93, remarriageWan: 12.29, marriedPopWan: 71.22, popWan: 8526,
+            femaleAgeDisplay: '26.97 岁 (省民政2023) / 29.66 岁 (省七普)', overallAgeDisplay: '27.76 岁 (男 28.48 / 女 26.97)',
+            ageBadge: '江苏省民政厅官方年报',
+            ageSource: '江苏省民政厅《2023年江苏省婚姻登记大数据》（全省初婚27.76岁：女26.97岁、男28.48岁）；江苏省统计局2020女性初婚公报值29.66岁',
+            highlightNote: '全国极少数连续四年公布初婚年龄的省份（2020年27.30岁→2023年27.76岁），2024结婚人口71.22万人居全国第四。'
+          },
+          {
+            name: '山东', fullName: '山东省', region: '华东 · 北方人口第一大省', rank: 5,
+            couplesWan: 35.30, firstMarriageWan: 50.42, remarriageWan: 20.19, marriedPopWan: 70.60, popWan: 10080,
+            femaleAgeDisplay: '28.16 岁', overallAgeDisplay: '28.54 岁 (男 28.91 / 女 28.16)',
+            ageBadge: '《山东人口普查年鉴-2020》实测',
+            ageSource: '《山东人口普查年鉴-2020》官方实测：全省平均初婚年龄28.54岁，其中女性平均初婚年龄28.16岁、男性28.91岁',
+            highlightNote: '常住人口超1亿，2024年结婚登记35.30万对（结婚人口70.60万人），女性初婚年龄28.16岁略高于全国七普女性均值。'
+          },
+          {
+            name: '安徽', fullName: '安徽省', region: '华东 · 长三角腹地', rank: 6,
+            couplesWan: 28.44, firstMarriageWan: 43.47, remarriageWan: 13.42, marriedPopWan: 56.88, popWan: 6123,
+            femaleAgeDisplay: '30.73 岁 (省民政登记实测)', overallAgeDisplay: '31.31 岁 (男 31.89 / 女 30.73)',
+            ageBadge: '安徽省民政厅官方通报',
+            ageSource: '安徽省民政厅2021婚姻登记大数据通报（初婚平均男31.89岁、女30.73岁）；《安徽人口普查年鉴-2020》存量初婚均值位于27–28岁区间',
+            highlightNote: '2024年结婚登记28.44万对（结婚人口56.88万人）居全国第六，粗结婚人口率9.29‰高于全国均值。'
+          },
+          {
+            name: '河北', fullName: '河北省', region: '华北 · 京津冀腹地', rank: 7,
+            couplesWan: 27.94, firstMarriageWan: 43.20, remarriageWan: 12.29, marriedPopWan: 55.88, popWan: 7378,
+            femaleAgeDisplay: '27.0–28.0 岁区间', overallAgeDisplay: '27.0–28.0 岁 (七普年鉴区间)',
+            ageBadge: '《河北人口普查年鉴-2020》实测',
+            ageSource: '《河北人口普查年鉴-2020》披露全省平均初婚年龄处于27–28岁区间（全国七普女性平均初婚年龄基准为27.95岁）',
+            highlightNote: '2024年结婚登记27.94万对（结婚人口55.88万人），其中初婚人数43.20万人，初婚占比77.31%。'
+          },
+          {
+            name: '云南', fullName: '云南省', region: '西南 · 多民族边疆省份', rank: 8,
+            couplesWan: 26.24, firstMarriageWan: 40.42, remarriageWan: 12.06, marriedPopWan: 52.48, popWan: 4655,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记26.24万对（结婚人口52.48万人），粗结婚人口率高达11.27‰（登记对数率5.64‰），位居全国前列。'
+          },
+          {
+            name: '贵州', fullName: '贵州省', region: '西南 · 青年人口高占比省份', rank: 9,
+            couplesWan: 26.12, firstMarriageWan: 39.97, remarriageWan: 12.28, marriedPopWan: 52.24, popWan: 3860,
+            femaleAgeDisplay: '27.26 岁 (全省七普初婚均值)', overallAgeDisplay: '27.26 岁 (《贵州人口普查年鉴-2020》)',
+            ageBadge: '《贵州人口普查年鉴-2020》实测',
+            ageSource: '《贵州人口普查年鉴-2020》官方实测全省平均初婚年龄27.26岁（明显低于全国均值28.67岁，全国七普女性基准为27.95岁）',
+            highlightNote: '常住人口3860万而2024结婚人口达52.24万人（26.12万对），粗结婚人口率高达13.53‰（6.77对/千人），高居全国第二！'
+          },
+          {
+            name: '浙江', fullName: '浙江省', region: '华东 · 共同富裕示范区', rank: 10,
+            couplesWan: 23.81, firstMarriageWan: 37.20, remarriageWan: 10.43, marriedPopWan: 47.62, popWan: 6670,
+            femaleAgeDisplay: '27.50 岁 (杭州民政) / 23.71 岁 (七普全龄存量)', overallAgeDisplay: '28.15 岁 (杭州男28.8/女27.5 · 宁波27.95)',
+            ageBadge: '杭州/宁波市民政局 + 省统计局',
+            ageSource: '杭州市民政局2022婚姻登记通报（初婚男28.8岁、女27.5岁）；宁波市民政局初婚均值27.95岁；浙江省统计局七普存量已婚妇女全龄均值23.71岁',
+            highlightNote: '2024年结婚登记23.81万对（结婚人口47.62万人），0–17岁养育成本85.49万元居全国第三，初婚年龄呈稳步推迟态势。'
+          },
+          {
+            name: '湖南', fullName: '湖南省', region: '华中 · 长江中游核心', rank: 11,
+            couplesWan: 23.26, firstMarriageWan: 33.93, remarriageWan: 12.58, marriedPopWan: 46.52, popWan: 6539,
+            femaleAgeDisplay: '27.95 岁 (省七普总体 >29.5岁)', overallAgeDisplay: '>29.50 岁 (男性超30岁 · 省七普年鉴)',
+            ageBadge: '《湖南人口普查年鉴-2020》实测',
+            ageSource: '《湖南人口普查年鉴-2020》实测全省平均初婚年龄超过29.5岁（男性超30岁）；全国七普女性平均初婚年龄基准为27.95岁',
+            highlightNote: '2024年结婚登记23.26万对（结婚人口46.52万人），省会长沙凭借6.5倍低房价收入比成为青年安居友好样本。'
+          },
+          {
+            name: '湖北', fullName: '湖北省', region: '华中 · 九省通衢', rank: 12,
+            couplesWan: 23.02, firstMarriageWan: 35.08, remarriageWan: 10.96, marriedPopWan: 46.04, popWan: 5834,
+            femaleAgeDisplay: '31.23 岁 (省民政登记实测)', overallAgeDisplay: '32.11 岁 (男 32.99 / 女 31.23)',
+            ageBadge: '湖北省民政厅官方大数据',
+            ageSource: '湖北省民政厅公布年度婚姻登记大数据：初婚平均年龄男士32.99岁、女士31.23岁（系年度民政登记口径）',
+            highlightNote: '2024年结婚登记23.02万对（结婚人口46.04万人），粗结婚人口率7.89‰，省民政厅实测年度初婚登记年龄突破30岁。'
+          },
+          {
+            name: '广西', fullName: '广西壮族自治区', region: '华南 · 西部陆海新通道', rank: 13,
+            couplesWan: 20.82, firstMarriageWan: 32.38, remarriageWan: 9.26, marriedPopWan: 41.64, popWan: 5013,
+            femaleAgeDisplay: '28.57 岁 (桂林民政实测)', overallAgeDisplay: '>29.00 岁 (全省七普男性 30.36岁)',
+            ageBadge: '《广西人口普查年鉴-2020》+ 桂林民政',
+            ageSource: '《广西人口普查年鉴-2020》实测全省平均初婚年龄超29岁（男性达30.36岁）；桂林市民政局2022初婚登记男30.1岁、女28.57岁',
+            highlightNote: '2024年结婚登记20.82万对（结婚人口41.64万人），初婚占比77.76%，男性初婚年龄在七普中已越过30岁线。'
+          },
+          {
+            name: '新疆', fullName: '新疆维吾尔自治区', region: '西北 · 丝路核心区', rank: 14,
+            couplesWan: 18.12, firstMarriageWan: 23.45, remarriageWan: 12.78, marriedPopWan: 36.24, popWan: 2623,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年常住人口2623万而结婚登记达18.12万对（结婚人口36.24万人），粗结婚人口率高达13.82‰（6.91对/千人），高居全国第一！'
+          },
+          {
+            name: '江西', fullName: '江西省', region: '华东 · 中部崛起毗邻区', rank: 15,
+            couplesWan: 18.01, firstMarriageWan: 28.52, remarriageWan: 7.50, marriedPopWan: 36.02, popWan: 4502,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记18.01万对（结婚人口36.02万人），其中初婚人数28.52万人，初婚占比达79.18%。'
+          },
+          {
+            name: '陕西', fullName: '陕西省', region: '西北 · 关中平原核心', rank: 16,
+            couplesWan: 16.84, firstMarriageWan: 24.67, remarriageWan: 9.02, marriedPopWan: 33.68, popWan: 3953,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记16.84万对（结婚人口33.68万人），粗结婚人口率8.52‰与全国平均水平（8.67‰）基本持平。'
+          },
+          {
+            name: '山西', fullName: '山西省', region: '华北 · 中部能源大省', rank: 17,
+            couplesWan: 16.00, firstMarriageWan: 25.57, remarriageWan: 6.44, marriedPopWan: 32.00, popWan: 3446,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记16.00万对（结婚人口32.00万人），粗结婚人口率9.29‰，初婚占比高达79.91%。'
+          },
+          {
+            name: '福建', fullName: '福建省', region: '华东 · 东南沿海经济带', rank: 18,
+            couplesWan: 15.16, firstMarriageWan: 23.16, remarriageWan: 7.15, marriedPopWan: 30.32, popWan: 4193,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记15.16万对（结婚人口30.32万人），粗结婚人口率7.23‰，初婚人数23.16万人。'
+          },
+          {
+            name: '辽宁', fullName: '辽宁省', region: '东北 · 环渤海工业基地', rank: 19,
+            couplesWan: 14.95, firstMarriageWan: 18.80, remarriageWan: 11.10, marriedPopWan: 29.90, popWan: 4155,
+            femaleAgeDisplay: '29.15 岁', overallAgeDisplay: '29.79 岁 (男 30.43 / 女 29.15)',
+            ageBadge: '《辽宁人口普查年鉴-2020》实测',
+            ageSource: '《辽宁人口普查年鉴-2020》官方实测：全省平均初婚年龄29.79岁，其中男性30.43岁、女性约29.15岁',
+            highlightNote: '东北高度城镇化代表省份，女性初婚年龄超29岁、男性超30岁；2024年结婚人口29.90万人，再婚占比达37.12%。'
+          },
+          {
+            name: '重庆', fullName: '重庆市', region: '西南 · 直辖市', rank: 20,
+            couplesWan: 14.68, firstMarriageWan: 19.86, remarriageWan: 9.49, marriedPopWan: 29.36, popWan: 3190,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '四大直辖市中结婚登记量最高，2024年结婚登记14.68万对（结婚人口29.36万人），粗结婚人口率9.20‰。'
+          },
+          {
+            name: '黑龙江', fullName: '黑龙江省', region: '东北 · 晚婚程度全国榜首', rank: 21,
+            couplesWan: 13.13, firstMarriageWan: 14.05, remarriageWan: 12.21, marriedPopWan: 26.26, popWan: 3029,
+            femaleAgeDisplay: '>30.0 岁 (全省均值 31.48岁)', overallAgeDisplay: '31.48 岁 (男女均超30岁 · 全国第1)',
+            ageBadge: '《黑龙江人口普查年鉴-2020》实测',
+            ageSource: '《黑龙江人口普查年鉴-2020》官方实测：全省平均初婚年龄高达31.48岁（全国最高，男女平均初婚年龄均突破30岁）',
+            highlightNote: '七普年鉴实测平均初婚年龄31.48岁居全国第一；2024年结婚人口26.26万人中再婚人数达12.21万人（占比46.50%）。'
+          },
+          {
+            name: '甘肃', fullName: '甘肃省', region: '西北 · 河西走廊', rank: 22,
+            couplesWan: 13.02, firstMarriageWan: 21.73, remarriageWan: 4.31, marriedPopWan: 26.04, popWan: 2458,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记13.02万对（结婚人口26.04万人），粗结婚人口率达10.59‰，初婚占比高达83.45%。'
+          },
+          {
+            name: '北京', fullName: '北京市', region: '华北 · 首都直辖市', rank: 23,
+            couplesWan: 11.45, firstMarriageWan: 14.82, remarriageWan: 8.08, marriedPopWan: 22.90, popWan: 2183,
+            femaleAgeDisplay: '29.30 岁 (>29岁区间)', overallAgeDisplay: '29.90 岁 (七普年鉴 >29.5岁 / 男超30岁)',
+            ageBadge: '《北京人口普查年鉴-2020》+ 卫健口径',
+            ageSource: '《北京人口普查年鉴-2020》实测平均初婚年龄超29.5岁（男性超30岁）；北京市卫健委披露平均初育年龄已超30.5岁',
+            highlightNote: '2024年结婚登记11.45万对（结婚人口22.90万人），0–17岁养育成本93.64万元居全国第二，高学历与高房价显著推迟女性初婚窗口。'
+          },
+          {
+            name: '内蒙古', fullName: '内蒙古自治区', region: '华北 · 北疆生态屏障', rank: 24,
+            couplesWan: 10.29, firstMarriageWan: 13.39, remarriageWan: 7.20, marriedPopWan: 20.58, popWan: 2388,
+            femaleAgeDisplay: '27.95 岁 (省七普总体 >29.0岁)', overallAgeDisplay: '>29.00 岁 (《内蒙古人口普查年鉴-2020》)',
+            ageBadge: '《内蒙古人口普查年鉴-2020》实测',
+            ageSource: '《内蒙古人口普查年鉴-2020》实测全区平均初婚年龄超过29.0岁；全国七普女性平均初婚年龄基准为27.95岁',
+            highlightNote: '2024年结婚登记10.29万对（结婚人口20.58万人），粗结婚人口率8.62‰，平均初婚年龄在北方省份中位居前列。'
+          },
+          {
+            name: '吉林', fullName: '吉林省', region: '东北 · 老工业基地', rank: 25,
+            couplesWan: 10.21, firstMarriageWan: 14.67, remarriageWan: 5.75, marriedPopWan: 20.42, popWan: 2317,
+            femaleAgeDisplay: '29.10 岁 (省七普均值 29.79岁)', overallAgeDisplay: '29.79 岁 (《吉林人口普查年鉴-2020》)',
+            ageBadge: '《吉林人口普查年鉴-2020》实测',
+            ageSource: '《吉林人口普查年鉴-2020》官方实测全省平均初婚年龄达29.79岁（与辽宁并列东北高位）',
+            highlightNote: '2024年结婚登记10.21万对（结婚人口20.42万人），七普平均初婚年龄29.79岁逼近30岁大关。'
+          },
+          {
+            name: '上海', fullName: '上海市', region: '华东 · 超大直辖市', rank: 26,
+            couplesWan: 9.02, firstMarriageWan: 12.80, remarriageWan: 5.24, marriedPopWan: 18.04, popWan: 2480,
+            femaleAgeDisplay: '29.50 岁 (2024市民政局实测)', overallAgeDisplay: '30.10 岁 (男 30.80 / 女 29.50)',
+            ageBadge: '上海市民政局官方通报',
+            ageSource: '上海市民政局2024年度婚姻登记统计通报（全市初婚均值30.1岁：男30.8岁、女29.5岁；2025全国通办后为男30.3岁、女29.1岁）',
+            highlightNote: '2024年结婚登记仅9.02万对（结婚人口18.04万人），粗结婚人口率7.27‰（3.64对/千人）为全国最低之一，育儿成本101.01万元居首。'
+          },
+          {
+            name: '天津', fullName: '天津市', region: '华北 · 滨海直辖市', rank: 27,
+            couplesWan: 6.04, firstMarriageWan: 9.72, remarriageWan: 2.37, marriedPopWan: 12.08, popWan: 1364,
+            femaleAgeDisplay: '27.95 岁 (市七普总体 >29.0岁)', overallAgeDisplay: '>29.00 岁 (《天津人口普查年鉴-2020》)',
+            ageBadge: '《天津人口普查年鉴-2020》实测',
+            ageSource: '《天津人口普查年鉴-2020》实测全市平均初婚年龄超过29.0岁；全国七普女性平均初婚年龄基准为27.95岁',
+            highlightNote: '2024年结婚登记6.04万对（结婚人口12.08万人），粗结婚人口率8.86‰，初婚占比达80.46%。'
+          },
+          {
+            name: '海南', fullName: '海南省', region: '华南 · 自贸港岛屿省份', rank: 28,
+            couplesWan: 4.68, firstMarriageWan: 7.49, remarriageWan: 1.87, marriedPopWan: 9.36, popWan: 1048,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记4.68万对（结婚人口9.36万人），粗结婚人口率8.93‰，初婚占比80.02%。'
+          },
+          {
+            name: '宁夏', fullName: '宁夏回族自治区', region: '西北 · 黄河几字弯', rank: 29,
+            couplesWan: 3.98, firstMarriageWan: 6.14, remarriageWan: 1.82, marriedPopWan: 7.96, popWan: 729,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记3.98万对（结婚人口7.96万人），粗结婚人口率达10.92‰（5.46对/千人），显著高于全国均值。'
+          },
+          {
+            name: '青海', fullName: '青海省', region: '西北 · 三江源高原省份', rank: 30,
+            couplesWan: 3.89, firstMarriageWan: 6.14, remarriageWan: 1.65, marriedPopWan: 7.78, popWan: 593,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记3.89万对（结婚人口7.78万人），粗结婚人口率高达13.12‰（6.56对/千人），居全国第三！'
+          },
+          {
+            name: '西藏', fullName: '西藏自治区', region: '西南 · 雪域高原', rank: 31,
+            couplesWan: 2.76, firstMarriageWan: 4.97, remarriageWan: 0.56, marriedPopWan: 5.52, popWan: 370,
+            femaleAgeDisplay: '27.95 岁 (全国七普基准)', overallAgeDisplay: '28.67 岁 (全国七普总体基准)',
+            ageBadge: '七普全国基准 + 2025年鉴实测',
+            ageSource: '国家统计局《中国人口普查年鉴-2020》全国女性初婚基准27.95岁；2024婚姻登记数据出自《中国统计年鉴2025》',
+            highlightNote: '2024年结婚登记2.76万对（结婚人口5.52万人），粗结婚人口率高达14.92‰（7.46对/千人），初婚占比高达90.04%居全国之首！'
+          }
+        ]
       }
     };
   </script>
@@ -328,9 +626,10 @@
         <nav class="hidden md:flex items-center gap-6 font-sans text-xs">
           <a href="#section-hero" class="hover:text-cyan-400 transition-colors">01. 序幕</a>
           <a href="#section-trend" class="hover:text-cyan-400 transition-colors">02. 十年曲线</a>
-          <a href="#section-cost" class="hover:text-cyan-400 transition-colors">03. 居住与育儿账本</a>
-          <a href="#section-workplace" class="hover:text-cyan-400 transition-colors">04. 职场与性别挤压</a>
-          <a href="#section-references" class="hover:text-cyan-400 transition-colors">05. 数据来源</a>
+          <a href="#section-china-map" class="text-sky-400 hover:text-sky-300 font-medium transition-colors">03. 中国婚育地图</a>
+          <a href="#section-cost" class="hover:text-cyan-400 transition-colors">04. 居住与育儿账本</a>
+          <a href="#section-workplace" class="hover:text-cyan-400 transition-colors">05. 职场与性别挤压</a>
+          <a href="#section-references" class="hover:text-cyan-400 transition-colors">06. 数据来源</a>
         </nav>
       </div>
     </header>
@@ -528,13 +827,204 @@
   </section>
 
   <!-- =========================================================================
+       SECTION 2.5 (NEW): 白省蓝海 · 中国31省市女性初婚年龄与结婚人口互动地图
+       （数据100%源自《中国统计年鉴2025》、《中国人口普查年鉴-2020》及各省市民政厅/局实测）
+  ========================================================================== -->
+  <section id="section-china-map" class="relative py-28 sm:py-36 px-6 border-t border-white/[0.06]">
+    <div class="pointer-events-none absolute top-1/3 left-1/4 w-[520px] h-[520px] rounded-full bg-blue-500/10 blur-[150px]"></div>
+
+    <div class="max-w-7xl mx-auto">
+      <!-- Section Header -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-12">
+        <div class="lg:col-span-7 reveal-up">
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-sky-400 mb-3">
+            <i data-lucide="MapPin" class="w-3.5 h-3.5"></i>
+            <span>CHAPTER 02 / PROVINCIAL MARRIAGE ATLAS (WHITE &amp; OCEAN BLUE EDITION)</span>
+          </div>
+          <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight">
+            白省蓝海 · 31省市婚育版图：<br />
+            <span class="text-sky-300 font-normal">点击各省查阅女性初婚年龄与结婚率（结婚人口）</span>
+          </h2>
+        </div>
+        <div class="lg:col-span-5 reveal-up text-gray-400 text-sm sm:text-base leading-relaxed">
+          本图采用<strong class="text-white">纯净白省 + 深邃蓝海</strong>高定配色。点击任意省份或直辖市，即可调阅<strong class="text-sky-300">国家统计局《中国统计年鉴2025》31省完整结婚登记人口、初婚/再婚人数、粗结婚率</strong>以及<strong class="text-white">《中国人口普查年鉴-2020》与各省民政厅公开的女性初婚年龄实测值</strong>。
+        </div>
+      </div>
+
+      <!-- Main Interactive Map + Right Provincial Dossier Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+
+        <!-- Left 7 Cols: White Provinces on Deep Ocean Blue Map Canvas -->
+        <div class="lg:col-span-7 china-ocean-canvas china-ocean-graticule rounded-3xl p-4 sm:p-6 relative overflow-hidden flex flex-col justify-between">
+          <!-- Top Nautical & Cartographic Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 z-10 pb-3 border-b border-sky-200/20">
+            <div class="flex items-center gap-2.5">
+              <span class="w-3 h-3 rounded-sm bg-white border border-sky-300 shadow-sm inline-block"></span>
+              <span class="text-xs font-mono text-white font-semibold tracking-wide">
+                中国省级政区（白省版图） · 海洋背景（深海蔚蓝）
+              </span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] font-mono text-sky-100 bg-sky-950/60 border border-sky-300/30 px-3 py-1 rounded-full">
+              <span class="w-2 h-2 rounded-full bg-sky-300 animate-ping"></span>
+              <span>点击地图任意省/直辖市 · 即刻调取官方档案</span>
+            </div>
+          </div>
+
+          <!-- Decorative Ocean Labels (渤海 / 黄海 / 东海 / 南海) -->
+          <div class="pointer-events-none select-none absolute right-10 top-[42%] text-[11px] font-serif italic tracking-[0.25em] text-sky-200/45 hidden sm:block">
+            黄 海 · YELLOW SEA
+          </div>
+          <div class="pointer-events-none select-none absolute right-8 top-[58%] text-[11px] font-serif italic tracking-[0.25em] text-sky-200/45 hidden sm:block">
+            东 海 · EAST CHINA SEA
+          </div>
+          <div class="pointer-events-none select-none absolute right-[24%] bottom-[14%] text-[11px] font-serif italic tracking-[0.25em] text-sky-200/45 hidden sm:block">
+            南 海 · SOUTH CHINA SEA
+          </div>
+
+          <!-- ECharts China Map Container -->
+          <div id="chart-china-map" class="w-full h-[460px] sm:h-[540px] z-10"></div>
+
+          <!-- Bottom National Benchmark Strip inside Ocean Box -->
+          <div class="z-10 pt-3 border-t border-sky-200/20 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-sky-100/90">
+            <div class="flex flex-wrap items-center gap-4">
+              <span><strong class="text-white">全国合计(2024)：</strong>结婚登记 610.56万对 (结婚人口 1221.12万人)</span>
+              <span class="hidden sm:inline text-sky-300/50">|</span>
+              <span><strong class="text-white">全国女性初婚基准(七普)：</strong>27.95岁 (总体 28.67岁 / 男 29.38岁)</span>
+            </div>
+            <span class="text-sky-200/75">支持滚轮缩放与拖拽漫游</span>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Selected Province Official Dossier Panel -->
+        <div class="lg:col-span-5 flex flex-col justify-between gap-5">
+          <div class="glass-card rounded-3xl p-6 sm:p-7 border border-sky-400/30 relative overflow-hidden flex-1 flex flex-col justify-between">
+            <div class="pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-sky-500/15 blur-3xl"></div>
+
+            <div>
+              <!-- Selected Province Header -->
+              <div class="flex items-start justify-between gap-4 pb-4 mb-5 border-b border-white/10">
+                <div>
+                  <div class="flex items-center gap-2 mb-1.5">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono bg-sky-500/20 text-sky-300 border border-sky-400/30" id="map-prov-rank">
+                      结婚人口全国第 1 位
+                    </span>
+                    <span class="text-xs font-mono text-gray-400" id="map-prov-region">
+                      华南 · 第一人口大省
+                    </span>
+                  </div>
+                  <h3 class="font-serif text-3xl sm:text-4xl font-bold text-white tracking-tight" id="map-prov-title">
+                    广东省
+                  </h3>
+                </div>
+                <div class="text-right font-mono">
+                  <span class="text-[11px] text-gray-400 block">2024年末常住人口</span>
+                  <span class="text-lg font-bold text-sky-300" id="map-prov-pop">12,780 万人</span>
+                </div>
+              </div>
+
+              <!-- Metric Group 1: Female Marriage Age & Overall First Marriage Age -->
+              <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-500/15 via-blue-900/20 to-transparent border border-sky-400/30 mb-4">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-xs font-mono uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
+                    <i data-lucide="UserCheck" class="w-3.5 h-3.5"></i>
+                    <span>女性初婚年龄 &amp; 全省初婚均值</span>
+                  </span>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-white/10 text-white" id="map-prov-age-badge">
+                    省民政/妇联实测公布
+                  </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-2">
+                  <div class="p-3 rounded-xl bg-black/30 border border-white/[0.07]">
+                    <span class="text-[11px] text-gray-400 block mb-1">女性平均初婚年龄</span>
+                    <span class="font-mono text-2xl font-bold text-rose-400" id="map-prov-female-age">27.72 岁</span>
+                    <span class="text-[11px] text-gray-400 block mt-1">全国七普女性基准：27.95岁</span>
+                  </div>
+                  <div class="p-3 rounded-xl bg-black/30 border border-white/[0.07]">
+                    <span class="text-[11px] text-gray-400 block mb-1">整体初婚年龄对照</span>
+                    <span class="font-mono text-base font-bold text-white leading-snug block mt-1" id="map-prov-overall-age">
+                      28.42 岁 (男 29.13 / 女 27.72)
+                    </span>
+                    <span class="text-[11px] text-gray-400 block mt-1">全国七普总体基准：28.67岁</span>
+                  </div>
+                </div>
+                <p class="text-[11px] font-mono text-sky-200/90 leading-relaxed mt-2" id="map-prov-age-source">
+                  信源：广东省妇联/民政统计披露（全省均值28.42岁：女27.72岁、男29.13岁；珠三角核心区初婚超29岁）
+                </p>
+              </div>
+
+              <!-- Metric Group 2: Marriage Rate & Marriage Population (《中国统计年鉴2025》) -->
+              <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 mb-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-mono uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                    <i data-lucide="HeartHandshake" class="w-3.5 h-3.5"></i>
+                    <span>2024结婚率与结婚人口（《中国统计年鉴2025》）</span>
+                  </span>
+                  <span class="text-[11px] font-mono text-emerald-400">100% 官方年鉴实测</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3">
+                  <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                    <span class="text-[11px] text-gray-400 block">结婚总人口</span>
+                    <span class="font-mono text-lg font-bold text-white" id="map-prov-married-pop">102.38万</span>
+                    <span class="text-[10px] font-mono text-gray-500 block">登记对数×2</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                    <span class="text-[11px] text-gray-400 block">结婚登记对数</span>
+                    <span class="font-mono text-lg font-bold text-cyan-400" id="map-prov-couples">51.19万对</span>
+                    <span class="text-[10px] font-mono text-gray-500 block">民政部门登记</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                    <span class="text-[11px] text-gray-400 block">结婚人口率</span>
+                    <span class="font-mono text-lg font-bold text-amber-400" id="map-prov-pop-rate">8.01‰</span>
+                    <span class="text-[10px] font-mono text-gray-500 block">全国均值 8.67‰</span>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                    <span class="text-[11px] text-gray-400 block">粗结婚对数率</span>
+                    <span class="font-mono text-lg font-bold text-violet-400" id="map-prov-couple-rate">4.01‰</span>
+                    <span class="text-[10px] font-mono text-gray-500 block">全国均值 4.34‰</span>
+                  </div>
+                </div>
+
+                <!-- First Marriage vs Remarriage Breakdown Bar -->
+                <div class="mt-3 pt-2 border-t border-white/[0.06]">
+                  <div class="flex items-center justify-between text-xs font-mono mb-1.5">
+                    <span class="text-sky-300" id="map-prov-first-text">初婚人数：83.19 万人 (81.3%)</span>
+                    <span class="text-rose-300" id="map-prov-remarry-text">再婚人数：19.19 万人 (18.7%)</span>
+                  </div>
+                  <div class="w-full h-2.5 rounded-full bg-rose-500/30 overflow-hidden flex">
+                    <div id="map-prov-first-bar" class="h-full bg-gradient-to-r from-sky-400 to-cyan-300 transition-all duration-500" style="width: 81.3%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Province Editorial Takeaway -->
+              <div class="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs text-gray-200 leading-relaxed" id="map-prov-note">
+                2024年结婚登记51.19万对（结婚人口102.38万人），连续多年稳居全国第一；初婚占比高达81.26%。
+              </div>
+            </div>
+
+            <!-- Quick 31-Province Selector Matrix -->
+            <div class="mt-5 pt-4 border-t border-white/10">
+              <div class="flex items-center justify-between text-[11px] font-mono text-gray-400 mb-2.5">
+                <span>快速点选31省市（按2024结婚人口排序）：</span>
+                <span class="text-sky-400">与左侧白蓝地图实时双向联动</span>
+              </div>
+              <div id="province-pill-container" class="flex flex-wrap gap-1.5 max-h-[126px] overflow-y-auto pr-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
        SECTION 3: 成本重压（气泡散点图 + 右侧固定悬浮叙事面板）
   ========================================================================== -->
   <section id="section-cost" class="relative py-28 sm:py-36 px-6 border-t border-white/[0.06]">
     <div class="max-w-7xl mx-auto">
       <div class="max-w-3xl mb-14 reveal-up">
         <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-rose-400 mb-3">
-          <span>CHAPTER 02 / HOUSING & CHILDCARE COST MATRIX</span>
+          <span>CHAPTER 03 / HOUSING &amp; CHILDCARE COST MATRIX</span>
         </div>
         <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight mb-4">
           哪些城市“结婚最贵”？<br />
@@ -690,7 +1180,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end mb-10">
         <div class="lg:col-span-7 reveal-up">
           <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-violet-400 mb-3">
-            <span>CHAPTER 03 / WORK HOURS & MOTHERHOOD PENALTY</span>
+            <span>CHAPTER 04 / WORK HOURS &amp; MOTHERHOOD PENALTY</span>
           </div>
           <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight">
             49小时周工时与“母职惩罚”：<br />
@@ -776,7 +1266,7 @@
       <div class="reveal-up mb-16">
         <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-400 mb-3">
           <i data-lucide="Database" class="w-3.5 h-3.5"></i>
-          <span>METHODOLOGY & AUTHORITATIVE REFERENCES</span>
+          <span>METHODOLOGY &amp; AUTHORITATIVE REFERENCES</span>
         </div>
         <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-6">
           数据来源与统计口径说明
@@ -801,6 +1291,12 @@
                   <td class="py-3.5 px-4">长表数据第五卷《婚姻》，按10%抽样户加权测算全国历年平均初婚年龄。</td>
                 </tr>
                 <tr>
+                  <td class="py-3.5 px-4 font-medium text-white">31省市结婚人口与女性婚龄地图</td>
+                  <td class="py-3.5 px-4 font-mono text-sky-300">2024全国610.56万对(1221.12万人)<br/>广东51.19万对 · 河南47.13万对 · 四川39.44万对</td>
+                  <td class="py-3.5 px-4">国家统计局《中国统计年鉴2025》表《2024年各地区婚姻登记情况》；各省《人口普查年鉴-2020》及省民政厅通报</td>
+                  <td class="py-3.5 px-4">31省市结婚登记对数、初婚/再婚人数100%摘自《中国统计年鉴2025》；未单独刊发省级初婚均值公报的省份严格标注七普全国女性基准(27.95岁)。</td>
+                </tr>
+                <tr>
                   <td class="py-3.5 px-4 font-medium text-white">地方民政初婚实测</td>
                   <td class="py-3.5 px-4 font-mono text-rose-300">上海2024：30.1岁(男30.8/女29.5)<br/>杭州2022：男28.8/女27.5<br/>江苏2023：27.76岁(男28.48/女26.97)</td>
                   <td class="py-3.5 px-4">上海市民政局、杭州市民政局、江苏省民政厅、安徽省民政厅历年婚姻登记统计通报</td>
@@ -819,7 +1315,7 @@
                   <td class="py-3.5 px-4">基于国家统计局《中国统计年鉴2023》分省居民人均消费支出及住户调查数据核算。</td>
                 </tr>
                 <tr>
-                  <td class="py-3.5 px-4 font-medium text-white">房价收入比 & 租金占比</td>
+                  <td class="py-3.5 px-4 font-medium text-white">房价收入比 &amp; 租金占比</td>
                   <td class="py-3.5 px-4 font-mono text-emerald-300">房价收入比：深圳34.8x / 长沙6.5x<br/>租金收入比：深圳26.95% / 上海25.28%</td>
                   <td class="py-3.5 px-4">诸葛数据研究中心《2024上半年重点50城租金收入比报告》、麟评居住大数据/易居研究院</td>
                   <td class="py-3.5 px-4">百城房价收入比均值2024年为10.3倍；重点50城平均租金占人均可支配收入比为12.75%。</td>
@@ -880,12 +1376,15 @@
     };
 
     let trendChartInstance = null;
+    let chinaMapChartInstance = null;
     let bubbleChartInstance = null;
     let workplaceChartInstance = null;
 
     let trendChartRendered = false;
+    let chinaMapChartRendered = false;
     let bubbleChartRendered = false;
     let workplaceChartRendered = false;
+    let currentSelectedProvince = '广东';
 
     /* -------------------------------------------------------------------------
        1. HERO & SCROLL ANIMATIONS
@@ -1254,6 +1753,257 @@
             trendChartInstance.setOption(buildTrendVolumeOption(), true);
           }
         });
+      });
+    }
+
+    /* -------------------------------------------------------------------------
+       2.5 SECTION 2.5: WHITE-ON-BLUE CHINA MAP (31 PROVINCES OFFICIAL ATLAS)
+    ------------------------------------------------------------------------- */
+    function findProvinceRecord(rawName) {
+      if (!rawName) return null;
+      const clean = String(rawName).replace(/(省|市|壮族自治区|回族自治区|维吾尔自治区|自治区|特别行政区)$/g, '');
+      return AUTHORITATIVE_DATA.provincialMarriageAtlas.provinces.find(
+        (p) => p.name === clean || p.fullName === rawName || String(rawName).indexOf(p.name) === 0
+      );
+    }
+
+    function updateProvinceDossier(rawName) {
+      const rec = findProvinceRecord(rawName);
+      if (!rec) return;
+      currentSelectedProvince = rec.name;
+
+      const popRate = ((rec.marriedPopWan / rec.popWan) * 1000).toFixed(2);
+      const coupleRate = ((rec.couplesWan / rec.popWan) * 1000).toFixed(2);
+      const firstShare = ((rec.firstMarriageWan / rec.marriedPopWan) * 100).toFixed(1);
+      const remarryShare = (100 - parseFloat(firstShare)).toFixed(1);
+
+      document.getElementById('map-prov-rank').textContent = `结婚人口全国第 ${rec.rank} 位`;
+      document.getElementById('map-prov-region').textContent = rec.region;
+      document.getElementById('map-prov-title').textContent = rec.fullName;
+      document.getElementById('map-prov-pop').textContent = `${rec.popWan.toLocaleString()} 万人`;
+
+      document.getElementById('map-prov-age-badge').textContent = rec.ageBadge;
+      document.getElementById('map-prov-female-age').textContent = rec.femaleAgeDisplay;
+      document.getElementById('map-prov-overall-age').textContent = rec.overallAgeDisplay;
+      document.getElementById('map-prov-age-source').textContent = `信源：${rec.ageSource}`;
+
+      document.getElementById('map-prov-married-pop').textContent = `${rec.marriedPopWan.toFixed(2)}万`;
+      document.getElementById('map-prov-couples').textContent = `${rec.couplesWan.toFixed(2)}万对`;
+      document.getElementById('map-prov-pop-rate').textContent = `${popRate}‰`;
+      document.getElementById('map-prov-couple-rate').textContent = `${coupleRate}‰`;
+
+      document.getElementById('map-prov-first-text').textContent = `初婚人数：${rec.firstMarriageWan.toFixed(2)} 万人 (${firstShare}%)`;
+      document.getElementById('map-prov-remarry-text').textContent = `再婚人数：${rec.remarriageWan.toFixed(2)} 万人 (${remarryShare}%)`;
+      document.getElementById('map-prov-first-bar').style.width = `${firstShare}%`;
+      document.getElementById('map-prov-note').textContent = rec.highlightNote;
+
+      // Sync active pill button
+      document.querySelectorAll('#province-pill-container .prov-pill').forEach((btn) => {
+        if (btn.getAttribute('data-prov') === rec.name) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Sync white-on-blue map selected province styling
+      if (chinaMapChartInstance && chinaMapChartRendered) {
+        chinaMapChartInstance.setOption({
+          series: [{ data: buildChinaMapSeriesData() }]
+        });
+      }
+    }
+
+    function buildChinaMapSeriesData() {
+      const provinces = AUTHORITATIVE_DATA.provincialMarriageAtlas.provinces;
+      const items = [];
+      provinces.forEach((p) => {
+        const isSelected = p.name === currentSelectedProvince;
+        const popRate = +((p.marriedPopWan / p.popWan) * 1000).toFixed(2);
+        const coupleRate = +((p.couplesWan / p.popWan) * 1000).toFixed(2);
+        const itemStyle = isSelected
+          ? {
+              areaColor: '#bae6fd',
+              borderColor: '#0284c7',
+              borderWidth: 2.4,
+              shadowColor: 'rgba(56, 189, 248, 0.75)',
+              shadowBlur: 20
+            }
+          : {
+              areaColor: '#ffffff',
+              borderColor: '#60a5fa',
+              borderWidth: 1.1,
+              shadowColor: 'rgba(8, 25, 68, 0.35)',
+              shadowBlur: 10
+            };
+
+        const labelStyle = isSelected
+          ? { show: true, color: '#0c4a6e', fontWeight: 800, fontSize: 11 }
+          : { show: true, color: '#1e3a8a', fontWeight: 600, fontSize: 10 };
+
+        // Push both short name (for china.js) and full name (for DataV GeoJSON) so both match 100%
+        items.push({
+          name: p.name,
+          value: p.marriedPopWan,
+          record: p,
+          popRate,
+          coupleRate,
+          itemStyle,
+          label: labelStyle
+        });
+        items.push({
+          name: p.fullName,
+          value: p.marriedPopWan,
+          record: p,
+          popRate,
+          coupleRate,
+          itemStyle,
+          label: labelStyle
+        });
+      });
+      return items;
+    }
+
+    function buildChinaMapOption() {
+      return {
+        backgroundColor: 'transparent',
+        tooltip: {
+          ...ECHARTS_TOOLTIP_STYLE,
+          trigger: 'item',
+          formatter: (params) => {
+            const rec = (params.data && params.data.record) || findProvinceRecord(params.name);
+            if (!rec) {
+              return `<div style="font-weight:700;color:#fff;">${params.name}</div><div style="font-size:11px;color:#9ca3af;">暂无《中国统计年鉴2025》分省婚姻登记明细</div>`;
+            }
+            const popRate = ((rec.marriedPopWan / rec.popWan) * 1000).toFixed(2);
+            const coupleRate = ((rec.couplesWan / rec.popWan) * 1000).toFixed(2);
+            const firstShare = ((rec.firstMarriageWan / rec.marriedPopWan) * 100).toFixed(1);
+            return `
+              <div style="min-width:265px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.12);">
+                  <span style="font-weight:700;font-size:15px;color:#fff;">${rec.fullName} <span style="font-size:11px;color:#93c5fd;font-weight:400;">(全国第${rec.rank}位)</span></span>
+                  <span style="font-family:JetBrains Mono;font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(56,189,248,0.2);color:#7dd3fc;">点击固定详情</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin:5px 0;">
+                  <span style="color:#9ca3af;">女性初婚年龄：</span>
+                  <span style="font-family:JetBrains Mono;font-weight:700;color:#fb7185;">${rec.femaleAgeDisplay}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin:5px 0;">
+                  <span style="color:#9ca3af;">整体初婚对照：</span>
+                  <span style="font-family:JetBrains Mono;font-weight:600;color:#e5e7eb;">${rec.overallAgeDisplay}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin:5px 0;">
+                  <span style="color:#9ca3af;">2024结婚总人口：</span>
+                  <span style="font-family:JetBrains Mono;font-weight:700;color:#38bdf8;">${rec.marriedPopWan.toFixed(2)} 万人 (${rec.couplesWan.toFixed(2)}万对)</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin:5px 0;">
+                  <span style="color:#9ca3af;">2024结婚率 (人口/对数)：</span>
+                  <span style="font-family:JetBrains Mono;font-weight:700;color:#fbbf24;">${popRate}‰ / ${coupleRate}‰</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin:5px 0;">
+                  <span style="color:#9ca3af;">初婚 / 再婚人数：</span>
+                  <span style="font-family:JetBrains Mono;font-size:12px;color:#a7f3d0;">初婚${rec.firstMarriageWan}万 (${firstShare}%) · 再婚${rec.remarriageWan}万</span>
+                </div>
+              </div>
+            `;
+          }
+        },
+        series: [
+          {
+            name: '中国分省婚育档案',
+            type: 'map',
+            map: 'china',
+            roam: true,
+            scaleLimit: { min: 0.85, max: 4.5 },
+            zoom: 1.18,
+            center: [104.5, 36.2],
+            selectedMode: false,
+            label: {
+              show: true,
+              color: '#1e3a8a',
+              fontSize: 10,
+              fontFamily: 'Inter, Noto Sans SC, sans-serif',
+              fontWeight: 600
+            },
+            itemStyle: {
+              areaColor: '#ffffff',
+              borderColor: '#60a5fa',
+              borderWidth: 1.1,
+              shadowColor: 'rgba(8, 25, 68, 0.42)',
+              shadowBlur: 12,
+              shadowOffsetY: 4
+            },
+            emphasis: {
+              label: {
+                show: true,
+                color: '#0f172a',
+                fontSize: 12,
+                fontWeight: 800
+              },
+              itemStyle: {
+                areaColor: '#dbeafe',
+                borderColor: '#0284c7',
+                borderWidth: 2.3,
+                shadowColor: 'rgba(56, 189, 248, 0.75)',
+                shadowBlur: 22
+              }
+            },
+            data: buildChinaMapSeriesData()
+          }
+        ]
+      };
+    }
+
+    function initChinaMapChart() {
+      const pillContainer = document.getElementById('province-pill-container');
+      const provinces = AUTHORITATIVE_DATA.provincialMarriageAtlas.provinces;
+
+      // Render 31 province quick-select pills
+      provinces.forEach((p) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('data-prov', p.name);
+        btn.className = `prov-pill px-2.5 py-1 rounded-lg text-xs font-mono border border-white/10 bg-white/[0.04] text-gray-300 hover:border-sky-400/50 hover:text-white ${
+          p.name === currentSelectedProvince ? 'active' : ''
+        }`;
+        btn.textContent = `${p.rank}.${p.name}`;
+        btn.addEventListener('click', () => {
+          updateProvinceDossier(p.name);
+        });
+        pillContainer.appendChild(btn);
+      });
+
+      const dom = document.getElementById('chart-china-map');
+      chinaMapChartInstance = echarts.init(dom);
+
+      const renderMapNow = () => {
+        if (chinaMapChartRendered) return;
+        chinaMapChartInstance.setOption(buildChinaMapOption());
+        chinaMapChartRendered = true;
+        updateProvinceDossier(currentSelectedProvince);
+      };
+
+      // If china.js already registered 'china', render on scroll trigger; otherwise fallback fetch
+      if (echarts.getMap('china')) {
+        ScrollTrigger.create({
+          trigger: '#chart-china-map',
+          start: 'top 82%',
+          onEnter: renderMapNow
+        });
+      } else {
+        fetch('https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/json/china.json')
+          .then((res) => res.json())
+          .then((geoJson) => {
+            echarts.registerMap('china', geoJson);
+            renderMapNow();
+          })
+          .catch(() => {});
+      }
+
+      chinaMapChartInstance.on('click', (params) => {
+        if (params && params.name) {
+          updateProvinceDossier(params.name);
+        }
       });
     }
 
@@ -1685,11 +2435,13 @@
     window.addEventListener('DOMContentLoaded', () => {
       initHeroAndScrollAnimations();
       initTrendChart();
+      initChinaMapChart();
       initBubbleChart();
       initWorkplaceChart();
 
       window.addEventListener('resize', () => {
         if (trendChartInstance) trendChartInstance.resize();
+        if (chinaMapChartInstance) chinaMapChartInstance.resize();
         if (bubbleChartInstance) bubbleChartInstance.resize();
         if (workplaceChartInstance) workplaceChartInstance.resize();
       });
